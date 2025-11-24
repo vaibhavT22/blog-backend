@@ -1,0 +1,72 @@
+package com.blog.sheetal.service;
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.blog.sheetal.model.Video;
+import com.blog.sheetal.repository.BlogRepository;
+
+
+@Service
+public class BlogService {
+
+	private String API_KEY = "AIzaSyAaqOICpVHjL1zznoTpbrQ2qMxreVGwZcI"; ;
+	private static final String CHANNEL_ID = "@sheetalravirajmetri2988";
+	//UC2fXzP6hbKEJkFS4ayjpqLg
+	private static final String YT_API_URL = "https://www.googleapis.com/youtube/v3/search?key=AIzaSyAaqOICpVHjL1zznoTpbrQ2qMxreVGwZcI&channelId=UC2fXzP6hbKEJkFS4ayjpqLg&part=snippet,id&order=date";
+	
+	@Autowired
+	private BlogRepository blogRepository;
+	
+	public List<Video> fetchVideos(){
+		String url = String.format(YT_API_URL, CHANNEL_ID, API_KEY);
+		RestTemplate restTemplate = new RestTemplate();
+		Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+		List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+		List<Video> videos = new ArrayList<>();
+		
+		for(Map<String, Object> item: items) {
+			Map<String, Object> idMap = (Map<String, Object>) item.get("id");
+			if(!"youtube#video".equals(idMap.get("kind"))) continue;
+			Map<String, Object> snippet = (Map<String, Object>) item.get("snippet");
+			Map<String, Object> thumbs = (Map<String, Object>) snippet.get("thumbnails");
+			Map<String, Object> highThumb = (Map<String, Object>) thumbs.get("high");
+			
+			Video video = new Video();
+			video.setVideoId((String) idMap.get("videoId"));
+			video.setTitle((String) snippet.get("title"));
+			video.setPublishedAt((String) snippet.get("publishedAt"));
+			video.setDescription((String) snippet.get("description"));
+			video.setThumbnailUrl((String) highThumb.get("url"));
+			
+			blogRepository.save(video);
+			videos.add(video);
+			
+		}
+		
+		
+		return videos;
+	}
+	
+	public List<Video> getAllVideos(){
+		return blogRepository.findAll();
+	}
+	
+	public List<Video> getLatestFiveVideos() {
+	    return blogRepository.findTop5ByOrderByPublishedAtDesc();
+	}
+
+	public void deleteVideoById(String videoId) {
+		// TODO Auto-generated method stub
+		
+		blogRepository.deleteById(videoId);
+	}
+	
+}

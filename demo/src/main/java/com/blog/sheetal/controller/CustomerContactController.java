@@ -1,0 +1,62 @@
+package com.blog.sheetal.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.blog.sheetal.model.CustomerContact;
+import com.blog.sheetal.service.CustomerContactService;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/api/contacts")
+public class CustomerContactController {
+	@Autowired
+	 CustomerContactService customerContactService;
+	@GetMapping("/")
+	public List<CustomerContact> getAllContacts() {
+		return customerContactService.getAllCustomerContacts();
+	}
+	
+	@PostMapping("/")
+	public CustomerContact addContact(@RequestBody CustomerContact customerContact) {
+		return  customerContactService.addCustomerContact(customerContact);
+	}
+	
+	@GetMapping("/{email}")
+	public CustomerContact getContactById(@PathVariable String email) {
+		return customerContactService.getCustomerContactByEmail(email);
+	}
+	@DeleteMapping("/{id}")
+	public void deleteContact(@PathVariable Long id) {
+		customerContactService.deleteCustomerContact(id);
+	}
+	@DeleteMapping("/deleteAll")
+	public Long deleteAllContacts() {
+		return customerContactService.deleteAllCustomerContacts();
+	}
+	//display message by email
+	@GetMapping("/email/{email}")
+	public List<CustomerContact> displayMessageByEmail(@PathVariable String email) {
+		return customerContactService.displayMessageByEmail(email);
+	}
+	//delete contact by email
+	@DeleteMapping("/email/{email}")
+	public void deleteContactByEmail(@PathVariable String email) {
+		customerContactService.deleteContactByEmail(email);
+	}
+	//block email
+	@DeleteMapping("/block/{email}")
+	public String blockEmail(@PathVariable String email) {
+		return customerContactService.blockEmail(email);
+	}
+	
+}

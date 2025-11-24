@@ -1,0 +1,44 @@
+package com.blog.sheetal.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.blog.sheetal.model.CustomerContact;
+import com.blog.sheetal.service.CustomerContactService;
+
+@RestController
+@RequestMapping("/api/contacts")
+public class CustomerContactController {
+	@Autowired
+	 CustomerContactService customerContactService;
+	@GetMapping("/")
+	public List<CustomerContact> getAllContacts() {
+		return customerContactService.getAllCustomerContacts();
+	}
+	
+	@PostMapping("/")
+	public void addContact(@RequestBody CustomerContact customerContact) {
+		customerContactService.addCustomerContact(customerContact);
+	}
+	
+	@GetMapping("/{id}")
+	public CustomerContact getContactById(@PathVariable Long id) {
+		return customerContactService.getCustomerContactById(id);
+	}
+	@DeleteMapping("/{id}")
+	public void deleteContact(@PathVariable Long id) {
+		customerContactService.deleteCustomerContact(id);
+	}
+	@DeleteMapping("/deleteAll")
+	public Long deleteAllContacts() {
+		return customerContactService.deleteAllCustomerContacts();
+	}
+}
