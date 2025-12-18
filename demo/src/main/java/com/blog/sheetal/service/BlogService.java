@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,11 +17,11 @@ import com.blog.sheetal.repository.BlogRepository;
 
 @Service
 public class BlogService {
-
-	private String API_KEY = "AIzaSyAaqOICpVHjL1zznoTpbrQ2qMxreVGwZcI"; ;
-	private static final String CHANNEL_ID = "@sheetalravirajmetri2988";
-	//UC2fXzP6hbKEJkFS4ayjpqLg
-	private static final String YT_API_URL = "https://www.googleapis.com/youtube/v3/search?key=AIzaSyAaqOICpVHjL1zznoTpbrQ2qMxreVGwZcI&channelId=UC2fXzP6hbKEJkFS4ayjpqLg&part=snippet,id&order=date";
+	@Value("${youtube.api.key}")
+	private  String API_KEY ;
+	@Value("${youtube.channel.id}")
+	private   String CHANNEL_ID ;
+	private  final String YT_API_URL = "https://www.googleapis.com/youtube/v3/search?key="+API_KEY+"&channelId="+CHANNEL_ID+"&part=snippet,id&order=date";
 	
 	@Autowired
 	private BlogRepository blogRepository;

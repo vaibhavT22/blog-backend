@@ -12,3 +12,8 @@ application.yml
 # IDE files
 /.idea/
 /.vscode/
+
+# Eclipse workspace files
+.metadata/
+# SonarLint
+.sonarlint/
