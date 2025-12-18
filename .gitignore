@@ -1,0 +1,14 @@
+# Maven build folder
+/target/
+
+# Environment variables / secrets
+.env
+application.properties
+application.yml
+
+# Logs
+*.log
+
+# IDE files
+/.idea/
+/.vscode/
